@@ -2,9 +2,12 @@ package com.example.jp.controller.product;
 
 import com.example.jp.domain.Product;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
@@ -39,6 +42,15 @@ public class ProductController {
                 new Product(4, "Yamaha Exciter", "Motorcycle", 200, "Blue", true, 2015, new Date())));
 
         return productFactory.createProductSearchResponse(products);
+    }
+
+    @PostMapping("/product/add")
+    public SuccessResponse addProduct(final @Valid @RequestBody ProductAddRequest request,
+                                      final BindingResult bindingResult) {
+        if(bindingResult.hasErrors()) {
+            throw new InvalidParameterException(getErrorMessage(bindingResult));
+        }
+        return new SuccessResponse(HttpStatus.OK.value(), "SUCCESS");
     }
 
     private String getErrorMessage(final BindingResult bindingResult) {
