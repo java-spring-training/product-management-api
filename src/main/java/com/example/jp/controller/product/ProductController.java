@@ -5,10 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.security.InvalidParameterException;
@@ -46,6 +43,15 @@ public class ProductController {
 
     @PostMapping("/product/add")
     public SuccessResponse addProduct(final @Valid @RequestBody ProductAddRequest request,
+                                      final BindingResult bindingResult) {
+        if(bindingResult.hasErrors()) {
+            throw new InvalidParameterException(getErrorMessage(bindingResult));
+        }
+        return new SuccessResponse(HttpStatus.OK.value(), "SUCCESS");
+    }
+
+    @PutMapping("/product/update")
+    public SuccessResponse updateProduct(final @Valid @RequestBody ProductAddRequest request,
                                       final BindingResult bindingResult) {
         if(bindingResult.hasErrors()) {
             throw new InvalidParameterException(getErrorMessage(bindingResult));
