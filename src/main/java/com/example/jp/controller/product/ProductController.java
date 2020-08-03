@@ -1,21 +1,24 @@
 package com.example.jp.controller.product;
 
 import com.example.jp.domain.Product;
+import org.hibernate.validator.constraints.Length;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Min;
 import java.security.InvalidParameterException;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
 @RestController
+@Validated
 public class ProductController {
 
     private ProductSearchResponseFactory productFactory;
@@ -56,6 +59,13 @@ public class ProductController {
         if(bindingResult.hasErrors()) {
             throw new InvalidParameterException(getErrorMessage(bindingResult));
         }
+        return new SuccessResponse(HttpStatus.OK.value(), "SUCCESS");
+    }
+
+    @DeleteMapping("/product/delete/{id}")
+    public SuccessResponse deleteProduct(
+            @Min(value = 1, message = "id must be greater than 0") final @PathVariable int id) {
+
         return new SuccessResponse(HttpStatus.OK.value(), "SUCCESS");
     }
 
